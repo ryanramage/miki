@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div id='container' class="container"></div>
+
+    <script id='template' type='text/ractive'>
+
+      <ol class="breadcrumb">
+        <li><a href="#/">spaces</a></li>
+        {{#space}}
+          <li><a href="#/space/{{space}}">{{space}}</a></li>
+        {{/space}}
+        {{#page.slug}}
+          <li><a href="#/space/{{space}}/{{page.slug}}">{{page.slug}}</a></li>
+        {{/page.slug}}
+      </ol>
+
+
+      {{#view.app_index}}
+        <div class="actions panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">
+              Spaces
+            </h3>
+          </div>
+          <div class="list-group">
+            {{#view.resp.rows}}
+              <a href="#/space/{{id}}" class="list-group-item">{{id}}</a>
+            {{/view.resp.rows}}
+          </div>
+        </div>
+        <a href="#/space/_new" class="btn btn-default">Create space</a>
+      {{/view.app_index}}
+
+
+
+      {{#view.space_new}}
+        <h2>New Space</h2>
+        <form role="form">
+          <div class="form-group">
+            <label>Space Name</label>
+            <input type="text" value="{{doc._id}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Sync Url</label>
+            <input type="text" value="{{doc.hosted_url}}" class="form-control">
+            <p class="help-block">
+              [Optional] A CouchDB URL to sync with, eg: <br/>
+              http://admin:admin@localhost:5984/wiki
+            </p>
+          </div>
+          <button class="btn btn-primary" on-click="_create">Create</button>
+          <a href="#/" class="btn btn-default">Cancel</a>
+        </form>
+      {{/view.space_new}}
+
+
+
+      {{#view.space_index}}
+        {{#view.not_found}}
+          Space Not Found
+        {{/view.not_found}}
+        <div class="actions panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">
+              Pages [{{space}}]
+            </h3>
+          </div>
+          <div class="list-group">
+            {{#rows}}
+              <a href="#/space/{{space}}/{{id}}"  class="list-group-item">{{id}}</a>
+            {{/rows}}
+          </div>
+        </div>
+        <a href="#/space/{{space}}/_new" class="btn btn-default">New Page</a>
+      {{/view.space_index}}
+
+
+
+      {{#view.entry_view}}
+        {{#error.not_found}}
+          The page does not exist. <a href="#/space/{{space}}/{{page.slug}}/_edit">Create It?</a>
+        {{/error.not_found}}
+        {{^error.not_found}}
+            <h2>{{page.title}}</h2>
+            <p>{{{page.entry}}}</p>
+            <a href="#/space/{{space}}/{{page.slug}}/_edit" class="btn btn-default">Edit</a>
+        {{/error.not_found}}
+      {{/view.entry_view}}
+
+
+
+      {{#view.entry_edit}}
+        {{#error.not_found}}
+          <div class="alert alert-info">This entry does not exist. You are about to create it.</div>
+        {{/error.not_found}}
+        <form class="form">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" value="{{page.slug}}" class="form-control"/>
+          </div>
+          <div class="form-group">
+            <textarea value="{{doc.entry}}" class="form-control" rows="5">
+            </textarea>
+          </div>
+          <button class="btn btn-primary" on-click="save">Save</button>
+          {{#page.slug}}
+            <a href="#/space/{{space}}/{{page.slug}}" class="btn btn-default">Cancel</a>
+          {{/page.slug}}
+          {{^page.slug}}
+            <a href="#/space/{{space}}" class="btn btn-default">Cancel</a>
+          {{/page.slug}}
+        </form>
+      {{/view.entry_edit}}
+
+
+    </script>
+    <script type="text/javascript" src="lib/marked.min.js"></script>
+    <script type="text/javascript" src="lib/director.min.js"></script>
+    <script type="text/javascript" src="lib/pouchdb-2.2.0.min.js"></script>
+    <script type="text/javascript" src="lib/ractive.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+  </body>
+</html>
