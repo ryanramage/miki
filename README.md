@@ -22,3 +22,20 @@ first app in which you own your own data. Please make more of these.
 
 It also shows the power of [ractive](http://ractivejs.org) and [pouchdb](http://pouchdb.com).
 
+Couch Sync
+----------
+
+To replicate with CouchDB, you need to make sure CORS is enabled.
+Follow the example instructions below.
+By default, CouchDB will be installed in "Admin Party", so
+only set the username and password if you have created an admin.
+Replace myname.iriscouch.com with your own host
+(127.0.0.1:5984 if installed locally)
+
+    $ export HOST=http://username:password@myname.iriscouch.com
+    $ curl -X PUT $HOST/_config/httpd/enable_cors -d '"true"'
+    $ curl -X PUT $HOST/_config/cors/origins -d '"*"'
+    $ curl -X PUT $HOST/_config/cors/credentials -d '"true"'
+    $ curl -X PUT $HOST/_config/cors/methods -d '"GET, PUT, POST, HEAD, DELETE"'
+    $ curl -X PUT $HOST/_config/cors/headers -d \
+      '"accept, authorization, content-type, origin"'
